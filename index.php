@@ -5,6 +5,9 @@
  * It routes them to appropriate pages in /pages/ folder
  */
 
+// Increase memory limit to prevent exhaustion
+ini_set('memory_limit', '2048M');
+
 // Get the requested file path
 $requestUri = $_SERVER['REQUEST_URI'];
 
@@ -32,12 +35,12 @@ if (substr($requestPath, -4) === '.php') {
     $requestPath = substr($requestPath, 0, -4);
 }
 
-// Build the actual file path
+// Build the actual file path (since we're already in pages folder)
 $filePath = __DIR__ . '/pages/' . $requestPath . '.php';
 
 // Security check: ensure the file is within the pages directory
 $realPath = realpath($filePath);
-$pagesDir = realpath(__DIR__ . '/pages/');
+$pagesDir = realpath(__DIR__ . '/pages');
 
 if ($realPath && $pagesDir && strpos($realPath, $pagesDir) === 0 && file_exists($realPath)) {
     // File exists in pages directory, include it

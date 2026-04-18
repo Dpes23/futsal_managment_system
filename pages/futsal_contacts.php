@@ -239,15 +239,27 @@ $futsals = include __DIR__ . '/../handlers/futsals_data.php';
                     </div>
                     
                     <div class="phone-section">
-                    <div class="phone-number">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
-                    <div class="contact-buttons">
-                        <a href="tel:<?= htmlspecialchars($futsal['phone']) ?>" class="call-btn">
-                            📞 Call Now
-                        </a>
-                        <a href="tel:<?= htmlspecialchars($futsal['phone']) ?>" class="call-btn">
-                            💬 WhatsApp
-                        </a>
-                    </div>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <div class="phone-number">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
+                        <div class="contact-buttons">
+                            <a href="tel:<?= htmlspecialchars($futsal['phone']) ?>" class="call-btn">
+                                📞 Call Now
+                            </a>
+                            <a href="tel:<?= htmlspecialchars($futsal['phone']) ?>" class="call-btn">
+                                💬 WhatsApp
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div class="phone-number">📞 Login to view phone number</div>
+                        <div class="contact-buttons">
+                            <a href="/login" class="call-btn">
+                                📞 Call Now
+                            </a>
+                            <a href="/login" class="call-btn">
+                                💬 WhatsApp
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>

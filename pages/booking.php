@@ -350,15 +350,24 @@ if (!$selectedFutsal && isset($_GET['futsal'])) {
                 <p><strong>💰 Price:</strong> Rs. <?= number_format($selectedFutsal['price']) ?>/hour</p>
                 <p><strong>⭐ Rating:</strong> <?= $selectedFutsal['rating'] ?> ★</p>
                 <p><strong>📞 Phone:</strong> 
-                    <a href="tel:<?= htmlspecialchars($selectedFutsal['phone']) ?>" 
-                       style="color: white; text-decoration: underline; font-weight: bold;">
-                        <?= htmlspecialchars($selectedFutsal['phone']) ?>
-                    </a>
-                    <a href="tel:<?= htmlspecialchars($selectedFutsal['phone']) ?>" 
-                       class="call-btn" 
-                       style="margin-left: 10px; padding: 5px 15px; background: rgba(255,255,255,0.3); border-radius: 20px; text-decoration: none; color: white; font-size: 12px;">
-                        📞 Call Now
-                    </a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="tel:<?= htmlspecialchars($selectedFutsal['phone']) ?>" 
+                           style="color: white; text-decoration: underline; font-weight: bold;">
+                            <?= htmlspecialchars($selectedFutsal['phone']) ?>
+                        </a>
+                        <a href="tel:<?= htmlspecialchars($selectedFutsal['phone']) ?>" 
+                           class="call-btn" 
+                           style="margin-left: 10px; padding: 5px 15px; background: rgba(255,255,255,0.3); border-radius: 20px; text-decoration: none; color: white; font-size: 12px;">
+                            📞 Call Now
+                        </a>
+                    <?php else: ?>
+                        <span style="color: white; font-weight: bold;">📞 Login to view phone number</span>
+                        <a href="/login" 
+                           class="call-btn" 
+                           style="margin-left: 10px; padding: 5px 15px; background: rgba(255,255,255,0.3); border-radius: 20px; text-decoration: none; color: white; font-size: 12px;">
+                            📞 Call Now
+                        </a>
+                    <?php endif; ?>
                 </p>
             </div>
             
