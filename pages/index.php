@@ -6,7 +6,7 @@
  */
 
 // Increase memory limit to prevent exhaustion
-ini_set('memory_limit', '1024M');
+ini_set('memory_limit', '4096M');
 
 // Get the requested file path
 $requestUri = $_SERVER['REQUEST_URI'];

@@ -1,0 +1,77 @@
+<svg width="400" height="250" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Indoor court background -->
+  <defs>
+    <linearGradient id="woodFloor" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#c19660;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#e5b885;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4a574;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="woodGrain" x="0" y="0" width="40" height="8" patternUnits="userSpaceOnUse">
+      <rect width="40" height="8" fill="url(#woodFloor)"/>
+      <line x1="0" y1="2" x2="40" y2="2" stroke="#b8865b" stroke-width="0.5" opacity="0.6"/>
+      <line x1="0" y1="6" x2="40" y2="6" stroke="#e5c895" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+    <linearGradient id="courtSurface" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5deb3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#daa520;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Indoor background -->
+  <rect width="400" height="250" fill="#f0f0f0"/>
+  
+  <!-- Wooden floor -->
+  <rect width="400" height="250" fill="url(#woodGrain)"/>
+  
+  <!-- Main futsal court -->
+  <rect x="30" y="40" width="340" height="170" fill="url(#courtSurface)" stroke="#8b4513" stroke-width="5" rx="2"/>
+  
+  <!-- Court lines with realistic appearance -->
+  <line x1="200" y1="40" x2="200" y2="210" stroke="white" stroke-width="5"/>
+  
+  <!-- Center circle -->
+  <circle cx="200" cy="125" r="35" fill="none" stroke="white" stroke-width="5"/>
+  <circle cx="200" cy="125" r="6" fill="white"/>
+  
+  <!-- Left penalty area -->
+  <rect x="30" y="65" width="80" height="120" fill="none" stroke="white" stroke-width="5"/>
+  <rect x="30" y="85" width="40" height="80" fill="none" stroke="white" stroke-width="5"/>
+  
+  <!-- Right penalty area -->
+  <rect x="290" y="65" width="80" height="120" fill="none" stroke="white" stroke-width="5"/>
+  <rect x="330" y="85" width="40" height="80" fill="none" stroke="white" stroke-width="5"/>
+  
+  <!-- Professional goals -->
+  <rect x="15" y="105" width="15" height="40" fill="#ff6b35" stroke="#cc4125" stroke-width="2"/>
+  <rect x="370" y="105" width="15" height="40" fill="#ff6b35" stroke="#cc4125" stroke-width="2"/>
+  
+  <!-- Goal net details -->
+  <pattern id="goalNet" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="4" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+  </pattern>
+  <rect x="15" y="105" width="15" height="40" fill="url(#goalNet)" opacity="0.6"/>
+  <rect x="370" y="105" width="15" height="40" fill="url(#goalNet)" opacity="0.6"/>
+  
+  <!-- Corner arcs -->
+  <path d="M 30 45 Q 38 40 46 45" fill="none" stroke="white" stroke-width="4"/>
+  <path d="M 354 45 Q 362 40 370 45" fill="none" stroke="white" stroke-width="4"/>
+  <path d="M 30 205 Q 38 210 46 205" fill="none" stroke="white" stroke-width="4"/>
+  <path d="M 354 205 Q 362 210 370 205" fill="none" stroke="white" stroke-width="4"/>
+  
+  <!-- Basketball-style 3-point lines (decorative) -->
+  <path d="M 30 125 Q 70 70 110 125" fill="none" stroke="#8b4513" stroke-width="2" opacity="0.3"/>
+  <path d="M 370 125 Q 330 70 290 125" fill="none" stroke="#8b4513" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Court markings wear -->
+  <ellipse cx="200" cy="125" rx="8" ry="4" fill="#d4a574" opacity="0.5"/>
+  <ellipse cx="80" cy="125" rx="6" ry="3" fill="#d4a574" opacity="0.4"/>
+  <ellipse cx="320" cy="125" rx="6" ry="3" fill="#d4a574" opacity="0.4"/>
+  
+  <!-- Indoor lighting effect -->
+  <ellipse cx="200" cy="125" rx="150" ry="80" fill="#ffffff" opacity="0.1"/>
+  
+  <!-- Wall boundaries -->
+  <rect x="25" y="35" width="350" height="180" fill="none" stroke="#666666" stroke-width="3" opacity="0.5"/>
+</svg>

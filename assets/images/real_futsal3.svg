@@ -1,0 +1,98 @@
+<svg width="400" height="250" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outdoor realistic court -->
+  <defs>
+    <linearGradient id="skyOutdoor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#B0E0E6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="turfGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ECC71;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#27AE60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#229954;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="turfTexture" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#27AE60"/>
+      <line x1="0" y1="3" x2="6" y2="3" stroke="#2ECC71" stroke-width="0.5"/>
+      <circle cx="2" cy="2" r="0.3" fill="#229954" opacity="0.6"/>
+      <circle cx="4" cy="4" r="0.3" fill="#2ECC71" opacity="0.4"/>
+    </pattern>
+    <radialGradient id="sunGradient">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.8" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="400" height="250" fill="url(#skyOutdoor)"/>
+  
+  <!-- Sun -->
+  <circle cx="320" cy="50" r="25" fill="url(#sunGradient)" opacity="0.9"/>
+  
+  <!-- Ground and surroundings -->
+  <rect y="170" width="400" height="80" fill="#8B7355"/>
+  <rect y="170" width="400" height="80" fill="#A0826D" opacity="0.3"/>
+  
+  <!-- Main futsal court with realistic turf -->
+  <rect x="35" y="45" width="330" height="125" fill="url(#turfGradient)" stroke="white" stroke-width="4" rx="2"/>
+  <rect x="35" y="45" width="330" height="125" fill="url(#turfTexture)" opacity="0.8"/>
+  
+  <!-- Court lines -->
+  <line x1="200" y1="45" x2="200" y2="170" stroke="white" stroke-width="4"/>
+  
+  <!-- Center circle -->
+  <circle cx="200" cy="107.5" r="28" fill="none" stroke="white" stroke-width="4"/>
+  <circle cx="200" cy="107.5" r="5" fill="white"/>
+  
+  <!-- Left penalty area -->
+  <rect x="35" y="60" width="65" height="95" fill="none" stroke="white" stroke-width="4"/>
+  <rect x="35" y="77.5" width="32" height="60" fill="none" stroke="white" stroke-width="4"/>
+  
+  <!-- Right penalty area -->
+  <rect x="300" y="60" width="65" height="95" fill="none" stroke="white" stroke-width="4"/>
+  <rect x="333" y="77.5" width="32" height="60" fill="none" stroke="white" stroke-width="4"/>
+  
+  <!-- Professional goals -->
+  <rect x="20" y="87.5" width="15" height="40" fill="#ffffff" stroke="#cccccc" stroke-width="2"/>
+  <rect x="365" y="87.5" width="15" height="40" fill="#ffffff" stroke="#cccccc" stroke-width="2"/>
+  
+  <!-- Goal nets with realistic pattern -->
+  <pattern id="realNet" x="0" y="0" width="3" height="3" patternUnits="userSpaceOnUse">
+    <rect width="3" height="3" fill="none" stroke="#888888" stroke-width="0.6"/>
+    <circle cx="1.5" cy="1.5" r="0.2" fill="#aaaaaa" opacity="0.5"/>
+  </pattern>
+  <rect x="20" y="87.5" width="15" height="40" fill="url(#realNet)" opacity="0.5"/>
+  <rect x="365" y="87.5" width="15" height="40" fill="url(#realNet)" opacity="0.5"/>
+  
+  <!-- Corner arcs -->
+  <path d="M 35 50 Q 42 45 49 50" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 351 50 Q 358 45 365 50" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 35 165 Q 42 170 49 165" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 351 165 Q 358 170 365 165" fill="none" stroke="white" stroke-width="3"/>
+  
+  <!-- Surrounding fence -->
+  <rect x="30" y="40" width="340" height="135" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="10,5" opacity="0.6"/>
+  
+  <!-- Environmental details -->
+  <rect x="10" y="180" width="80" height="70" fill="#228B22" opacity="0.4"/>
+  <rect x="310" y="180" width="80" height="70" fill="#228B22" opacity="0.4"/>
+  
+  <!-- Trees/bushes -->
+  <circle cx="30" cy="160" r="15" fill="#228B22" opacity="0.7"/>
+  <circle cx="370" cy="160" r="15" fill="#228B22" opacity="0.7"/>
+  <circle cx="25" cy="155" r="10" fill="#32CD32" opacity="0.6"/>
+  <circle cx="375" cy="155" r="10" fill="#32CD32" opacity="0.6"/>
+  
+  <!-- Shadows for realism -->
+  <ellipse cx="200" cy="175" rx="170" ry="10" fill="#000000" opacity="0.3"/>
+  <ellipse cx="30" cy="175" rx="20" ry="5" fill="#000000" opacity="0.4"/>
+  <ellipse cx="370" cy="175" rx="20" ry="5" fill="#000000" opacity="0.4"/>
+  
+  <!-- Court wear patterns -->
+  <ellipse cx="100" cy="107" rx="12" ry="6" fill="#229954" opacity="0.4"/>
+  <ellipse cx="300" cy="107" rx="12" ry="6" fill="#229954" opacity="0.4"/>
+  <ellipse cx="200" cy="107" rx="6" ry="3" fill="#229954" opacity="0.5"/>
+  
+  <!-- Lighting effects -->
+  <ellipse cx="200" cy="107" rx="140" ry="70" fill="#ffffff" opacity="0.15"/>
+</svg>

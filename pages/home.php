@@ -647,6 +647,94 @@ session_start();
 
     <!-- Content Section -->
     <div class="content-container">
+        <!-- Futsal Showcase Section -->
+        <section class="futsal-showcase">
+            <h2>Featured Futsal Courts</h2>
+            <p>Discover our top-rated futsal courts with instant contact options</p>
+            
+            <div class="futsals-grid">
+                <?php
+                require_once __DIR__ . '/../includes/recommendation_engine.php';
+                
+                // Check if user has location preference
+                $recommendationType = 'top_rated';
+                $recommendationParams = [];
+                $showRecommendedBadge = false;
+                
+                if (isset($_SESSION['user_location']) && !empty($_SESSION['user_location'])) {
+                    // User provided location, show location-based recommendations
+                    $locationCoords = explode(',', $_SESSION['user_location']);
+                    // For now, use a simple location name based on coordinates
+                    $locationName = 'Kathmandu'; // This could be enhanced with reverse geocoding
+                    $recommendationType = 'location';
+                    $recommendationParams = ['location' => $locationName];
+                    $showRecommendedBadge = true;
+                } elseif (isset($_SESSION['user_id'])) {
+                    // Logged in user without location, show personalized recommendations
+                    $recommendationType = 'general';
+                    $showRecommendedBadge = true;
+                }
+                
+                $recommendedFutsals = getFutsalRecommendations($recommendationType, $recommendationParams, 6);
+                
+                foreach ($recommendedFutsals as $futsal):
+                ?>
+                    <div class="futsal-card">
+                        <?php
+                        $imageIndex = ($futsal['name'] === 'Maharajgunj Futsal') ? 1 : 
+                                     (($futsal['name'] === 'Grassroots Center') ? 2 : 3);
+                        ?>
+                        <img src="../assets/images/real_futsal<?= $imageIndex ?>.svg" 
+                             alt="<?= htmlspecialchars($futsal['name']) ?>" 
+                             class="futsal-image">
+                        
+                        <div class="futsal-content">
+                            <?php if ($showRecommendedBadge): ?>
+                                <div class="recommendation-badge">
+                                    🏆 Recommended
+                                </div>
+                            <?php endif; ?>
+                            <h3><?= htmlspecialchars($futsal['name']) ?></h3>
+                            
+                            <div class="futsal-info">
+                                <div class="info-item">
+                                    <span class="info-icon">📍</span>
+                                    <span><?= htmlspecialchars($futsal['address']) ?></span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <span class="info-icon">💰</span>
+                                    <span>Rs. <?= number_format($futsal['price']) ?>/hr</span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <span class="info-icon">⭐</span>
+                                    <span><?= $futsal['rating'] ?> ★</span>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-info">
+                                <div class="contact-buttons">
+                                    <a href="/login" class="call-btn">
+                                        &#128222; Call Now
+                                    </a>
+                                    <a href="/login" class="view-all-btn">
+                                        View All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="/login" class="view-all-btn-large">
+                    &#128196; View All Futsal Contacts (Login Required)
+                </a>
+            </div>
+        </section>
+
         <!-- Features Section -->
         <section id="features">
             <h2 class="section-title">Why Choose Us?</h2>
@@ -742,115 +830,6 @@ session_start();
             </div>
         </section>
 
-        <!-- Futsal Showcase Section -->
-        <section class="futsal-showcase">
-            <h2>Featured Futsal Courts</h2>
-            <p>Discover our top-rated futsal courts with instant contact options</p>
-            
-            <div class="futsals-grid">
-                <?php
-                require_once __DIR__ . '/../includes/recommendation_engine.php';
-                
-                // Check if user has location preference
-                $recommendationType = 'top_rated';
-                $recommendationParams = [];
-                $showRecommendedBadge = false;
-                
-                if (isset($_SESSION['user_location']) && !empty($_SESSION['user_location'])) {
-                    // User provided location, show location-based recommendations
-                    $locationCoords = explode(',', $_SESSION['user_location']);
-                    // For now, use a simple location name based on coordinates
-                    $locationName = 'Kathmandu'; // This could be enhanced with reverse geocoding
-                    $recommendationType = 'location';
-                    $recommendationParams = ['location' => $locationName];
-                    $showRecommendedBadge = true;
-                } elseif (isset($_SESSION['user_id'])) {
-                    // Logged in user without location, show personalized recommendations
-                    $recommendationType = 'general';
-                    $showRecommendedBadge = true;
-                }
-                
-                $recommendedFutsals = getFutsalRecommendations($recommendationType, $recommendationParams, 6);
-                
-                foreach ($recommendedFutsals as $futsal):
-                ?>
-                    <div class="futsal-card">
-                        <img src="https://source.unsplash.com/400x250/?futsal,football,sports" 
-                             alt="<?= htmlspecialchars($futsal['name']) ?>" 
-                             class="futsal-image"
-                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDQwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjRjVGNUY1Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5OTk5IiBmb250LXNpemU9IjE4IiBmb250LWZhbWlseT0iQXJpYWwiPjx0c3BhbiB4PSIyMDAiIGR5PSIxMDAiPuKApuKArzwvdHNwYW4+PHRzcGFuIHg9IjIwMCIgeT0iMTMwIj7igJg8L3RzcGFuPjwvdGV4dD4KPC9zdmc+'">
-                        
-                        <div class="futsal-content">
-                            <?php if ($showRecommendedBadge): ?>
-                                <div class="recommendation-badge">
-                                    🏆 Recommended
-                                </div>
-                            <?php endif; ?>
-                            <h3><?= htmlspecialchars($futsal['name']) ?></h3>
-                            
-                            <div class="futsal-info">
-                                <div class="info-item">
-                                    <span class="info-icon">📍</span>
-                                    <span><?= htmlspecialchars($futsal['address']) ?></span>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <span class="info-icon">💰</span>
-                                    <span>Rs. <?= number_format($futsal['price']) ?>/hr</span>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <span class="info-icon">⭐</span>
-                                    <span><?= $futsal['rating'] ?> ★</span>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-info">
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <div class="phone-number">
-                                        📞 <?= htmlspecialchars($futsal['phone']) ?>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="phone-number">
-                                        🔒 Login to view phone number
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <div class="contact-buttons">
-                                    <?php if (isset($_SESSION['user_id'])): ?>
-                                        <a href="tel:<?= htmlspecialchars($futsal['phone']) ?>" class="call-btn">
-                                            📞 Call Now
-                                        </a>
-                                        <a href="/futsal_contacts.php" class="view-all-btn">
-                                            View All
-                                        </a>
-                                    <?php else: ?>
-                                        <a href="/login" class="call-btn">
-                                            📞 Call Now
-                                        </a>
-                                        <a href="/login" class="view-all-btn">
-                                            View All
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            
-            <div style="text-align: center; margin-top: 40px;">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="/futsal_contacts.php" class="view-all-btn-large">
-                        📞 View All Futsal Contacts (31 Courts)
-                    </a>
-                <?php else: ?>
-                    <a href="/login" class="view-all-btn-large">
-                        📞 View All Futsal Contacts (Login Required)
-                    </a>
-                <?php endif; ?>
-            </div>
-        </section>
 
         <!-- Info Section -->
         <section class="info-section">
