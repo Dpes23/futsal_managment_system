@@ -88,6 +88,7 @@ function createTables($pdo) {
             booking_time TIME NOT NULL,
             duration_hours DECIMAL(3,1) NOT NULL,
             total_price DECIMAL(10,2) NOT NULL,
+            prepayment_amount DECIMAL(10,2) DEFAULT 100.00,
             status ENUM('confirmed', 'cancelled') DEFAULT 'confirmed',
             prepayment_status ENUM('pending', 'paid') DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -104,6 +105,13 @@ function createTables($pdo) {
         // Column already exists, ignore error
     }
     
+    // Add prepayment_amount column if it doesn't exist (for existing databases)
+    try {
+        $pdo->exec("ALTER TABLE bookings ADD COLUMN prepayment_amount DECIMAL(10,2) DEFAULT 100.00");
+    } catch (Exception $e) {
+        // Column already exists, ignore error
+    }
+    
     
     // Insert sample users
     $pdo->exec("
@@ -112,5 +120,9 @@ function createTables($pdo) {
         ('john_doe', 'john@example.com', '\$2y\$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'John Doe', 0),
         ('jane_smith', 'jane@example.com', '\$2y\$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Jane Smith', 0)
     ");
+    
+    // Update john_doe password to 'password' if it exists
+    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE username = 'john_doe'");
+    $stmt->execute(['$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi']);
 }
 ?>

@@ -35,6 +35,17 @@ if (substr($requestPath, -4) === '.php') {
     $requestPath = substr($requestPath, 0, -4);
 }
 
+// Special handling for standalone login and register files
+if ($requestPath === 'login') {
+    require __DIR__ . '/pages/login.php';
+    exit();
+}
+
+if ($requestPath === 'register') {
+    require __DIR__ . '/pages/register.php';
+    exit();
+}
+
 // Build the actual file path (since we're already in pages folder)
 $filePath = __DIR__ . '/pages/' . $requestPath . '.php';
 

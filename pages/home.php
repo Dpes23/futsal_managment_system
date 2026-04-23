@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Handle logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: /');
+    exit();
+}
+
 // Home page is accessible to both logged-in and non-logged-in users
 ?>
 
@@ -488,6 +495,29 @@ session_start();
             object-fit: cover;
         }
         
+        .futsal-image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .futsal-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .futsal-name {
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+        
         .futsal-content {
             padding: 20px;
         }
@@ -627,8 +657,17 @@ session_start();
                 Futsal Recommendation System
             </a>
             <div class="nav-buttons">
-                <a href="/login" class="nav-btn login">Login</a>
-                <a href="/register" class="nav-btn register">Register</a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="?logout=1" class="nav-btn login">Logout (<?= htmlspecialchars($_SESSION['username'] ?? 'User') ?>)</a>
+                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                        <a href="admin_bookings.php" class="nav-btn register">Admin Panel</a>
+                    <?php else: ?>
+                        <a href="my_bookings.php" class="nav-btn register">My Bookings</a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <a href="login.php" class="nav-btn login">Login</a>
+                    <a href="register.php" class="nav-btn register">Register</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
@@ -639,7 +678,7 @@ session_start();
             <h1>Find & Book Your Perfect Futsal Court</h1>
             <p>Discover the best futsal courts near you with intelligent recommendations based on location, ratings, and prices.</p>
             <div class="hero-buttons">
-                <a href="/login" class="hero-btn primary">Get Started</a>
+                <a href="login.php" class="hero-btn primary">Get Started</a>
                 <a href="#features" class="hero-btn secondary">Learn More</a>
             </div>
         </div>
@@ -680,13 +719,10 @@ session_start();
                 foreach ($recommendedFutsals as $futsal):
                 ?>
                     <div class="futsal-card">
-                        <?php
-                        $imageIndex = ($futsal['name'] === 'Maharajgunj Futsal') ? 1 : 
-                                     (($futsal['name'] === 'Grassroots Center') ? 2 : 3);
-                        ?>
-                        <img src="../assets/images/real_futsal<?= $imageIndex ?>.svg" 
-                             alt="<?= htmlspecialchars($futsal['name']) ?>" 
-                             class="futsal-image">
+                        <div class="futsal-image-placeholder">
+                            <div class="futsal-icon">⚽</div>
+                            <div class="futsal-name"><?= htmlspecialchars($futsal['name']) ?></div>
+                        </div>
                         
                         <div class="futsal-content">
                             <?php if ($showRecommendedBadge): ?>
@@ -715,10 +751,10 @@ session_start();
                             
                             <div class="contact-info">
                                 <div class="contact-buttons">
-                                    <a href="/login" class="call-btn">
+                                    <a href="login.php" class="call-btn">
                                         &#128222; Call Now
                                     </a>
-                                    <a href="/login" class="view-all-btn">
+                                    <a href="login.php" class="view-all-btn">
                                         View All
                                     </a>
                                 </div>
@@ -729,7 +765,7 @@ session_start();
             </div>
             
             <div style="text-align: center; margin-top: 40px;">
-                <a href="/login" class="view-all-btn-large">
+                <a href="login.php" class="view-all-btn-large">
                     &#128196; View All Futsal Contacts (Login Required)
                 </a>
             </div>
@@ -851,8 +887,8 @@ session_start();
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <a href="/login" class="btn-primary">Login to Your Account</a>
-            <a href="/register" class="btn-secondary">Create New Account</a>
+            <a href="login.php" class="btn-primary">Login to Your Account</a>
+            <a href="register.php" class="btn-secondary">Create New Account</a>
         </div>
     </div>
 

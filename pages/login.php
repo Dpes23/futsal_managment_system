@@ -1,19 +1,15 @@
 <?php
 session_start();
 
-// Check if user is already logged in
 if (isset($_SESSION['user_id'])) {
     header('Location: /index');
     exit();
 }
 
-// Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    $login_type = $_POST['login_type'] ?? 'user'; // Determine if it's admin or user login
     
-    // Use MySQL database for authentication
     require_once __DIR__ . '/../config/database.php';
     $pdo = getDatabaseConnection();
     
@@ -28,17 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['full_name'] = $user['full_name'];
             $_SESSION['is_admin'] = $user['is_admin'] ?? 0;
             
-            // Store user location if provided
-            if (isset($_POST['user_location']) && !empty($_POST['user_location'])) {
-                $_SESSION['user_location'] = $_POST['user_location'];
-            }
-            
-            // Redirect based on login type
-            if ($login_type === 'admin') {
-                // For admin login, redirect to admin panel
+            if ($user['is_admin']) {
                 header('Location: /admin_bookings');
             } else {
-                // For user login, redirect to dashboard
                 header('Location: /index');
             }
             exit();
@@ -46,442 +34,334 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Invalid username or password';
         }
     } catch(PDOException $e) {
-        $error = 'Database error: ' . $e->getMessage();
+        $error = 'Database error';
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Futsal Recommendation System</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 500px;
+            justify-content: center;
             padding: 20px;
         }
-
-        .auth-card {
+        
+        .login-container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.6s ease-out;
         }
-
-        .auth-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px;
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
             text-align: center;
-            color: white;
+            margin-bottom: 30px;
         }
-
-        .auth-header .logo {
+        
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .login-icon {
             font-size: 48px;
             margin-bottom: 15px;
         }
-
-        .auth-header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .auth-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .auth-form {
-            padding: 40px 30px;
-        }
-
+        
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-
+        
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
             color: #333;
+            font-weight: 600;
             font-size: 14px;
         }
-
+        
         .form-group input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s;
-            background-color: #f8f9fa;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
-
+        
         .form-group input:focus {
-            border-color: #667eea;
-            background-color: white;
             outline: none;
+            border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
-        .form-group input::placeholder {
-            color: #999;
+        
+        .password-container {
+            position: relative;
         }
-
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #666;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #667eea;
+        }
+        
         .login-btn {
             width: 100%;
+            padding: 14px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             margin-top: 10px;
         }
-
+        
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
-
-        .login-btn:active {
-            transform: translateY(0);
-        }
-
+        
         .error-message {
-            background-color: #fee;
+            background: #fee;
             color: #c33;
-            padding: 12px 15px;
+            padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid #c33;
+            text-align: center;
             font-size: 14px;
+            border: 1px solid #fcc;
         }
-
-        .success-message {
-            background-color: #efe;
-            color: #3c3;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #3c3;
-            font-size: 14px;
-        }
-
-        .auth-links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+        
+        .login-links {
+            text-align: center;
+            margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #eee;
         }
-
-        .auth-link {
-            text-decoration: none;
-            color: #667eea;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .auth-link:hover {
-            color: #764ba2;
-        }
-
-        .login-tabs {
+        
+        .tab-container {
             display: flex;
-            gap: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 5px;
         }
-
-        .login-tab {
+        
+        .tab-btn {
             flex: 1;
             padding: 12px;
-            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 14px;
             font-weight: 600;
-            color: #999;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            background-color: #f8f9fa;
+            color: #666;
+            transition: all 0.3s ease;
         }
-
-        .login-tab.active {
+        
+        .tab-btn.active {
+            background: white;
             color: #667eea;
-            border-bottom-color: #667eea;
-            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .login-tab:hover {
-            color: #667eea;
+        
+        .tab-btn:hover:not(.active) {
+            background: #e0e0e0;
         }
-
+        
         .tab-content {
             display: none;
         }
-
+        
         .tab-content.active {
             display: block;
         }
-
-        .admin-hint {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            border-left: 4px solid #ffc107;
+        
+        .login-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s ease;
         }
-
-        .location-btn {
+        
+        .login-links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
             width: 100%;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 10px;
+            height: 1px;
+            background: #e0e0e0;
         }
-
-        .location-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        .location-btn:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 600px) {
-            .auth-header {
-                padding: 30px 20px;
-            }
-
-            .auth-header h1 {
-                font-size: 24px;
-            }
-
-            .auth-form {
-                padding: 30px 20px;
-            }
-
-            .auth-container {
-                padding: 10px;
-            }
+        
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #999;
+            font-size: 12px;
+            position: relative;
         }
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="logo">⚽</div>
-                <h1>Futsal Recommendation System</h1>
-                <p>Login to your account</p>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">⚽</div>
+            <h1>Welcome Back</h1>
+            <p>Login to access your futsal booking account</p>
+        </div>
+        
+        <?php if (isset($error)): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($error); ?>
             </div>
-
-            <div class="login-tabs">
-                <div class="login-tab active" onclick="switchTab('user')">👤 User Login</div>
-                <div class="login-tab" onclick="switchTab('admin')">🔐 Admin Login</div>
-            </div>
-
-            <!-- User Login Tab -->
-            <div id="user-tab" class="tab-content active">
-                <form class="auth-form" method="POST" action="">
-                    <input type="hidden" name="login_type" value="user">
-                    
-                    <?php if (isset($error)): ?>
-                        <div class="error-message">
-                            <strong>Error:</strong> <?php echo htmlspecialchars($error); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            placeholder="Enter your username"
-                            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            placeholder="Enter your password"
-                            required
-                        >
-                    </div>
-
-                    <div class="location-section" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <span style="color: #666; font-size: 14px;">Get personalized recommendations</span>
-                        </div>
-                        <button type="button" class="location-btn" onclick="useCurrentLocation()">
-                            📍 Use My Current Location
-                        </button>
-                        <input type="hidden" id="user_location" name="user_location">
-                        <div id="location-status" style="margin-top: 10px; font-size: 12px; color: #666; text-align: center;"></div>
-                    </div>
-                    
-                    <button type="submit" class="login-btn">Login</button>
-                </form>
-            </div>
-
-            <!-- Admin Login Tab -->
-            <div id="admin-tab" class="tab-content">
-                <div class="auth-form">
-                    <div class="admin-hint">
-                        <strong>🔐 Admin Access Only</strong><br>
-                        Use admin credentials to access the admin panel
-                    </div>
-
-                    <form method="POST" action="">
-                        <input type="hidden" name="login_type" value="admin">
-                        
-                        <?php if (isset($error) && isset($_POST['login_type']) && $_POST['login_type'] === 'admin'): ?>
-                            <div class="error-message">
-                                <strong>Error:</strong> <?php echo htmlspecialchars($error); ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="form-group">
-                            <label for="admin-username">Admin Username</label>
-                            <input 
-                                type="text" 
-                                id="admin-username" 
-                                name="username" 
-                                placeholder="admin"
-                                value="<?php echo isset($_POST['username']) && isset($_POST['login_type']) && $_POST['login_type'] === 'admin' ? htmlspecialchars($_POST['username']) : ''; ?>"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="admin-password">Admin Password</label>
-                            <input 
-                                type="password" 
-                                id="admin-password" 
-                                name="password" 
-                                placeholder="Enter admin password"
-                                required
-                            >
-                        </div>
-
-                        <button type="submit" class="login-btn">Admin Login</button>
-                    </form>
+        <?php endif; ?>
+        
+        <div class="tab-container">
+            <button type="button" class="tab-btn active" onclick="switchTab('user')">User Account</button>
+            <button type="button" class="tab-btn" onclick="switchTab('admin')">Admin Account</button>
+        </div>
+        
+        <form method="post" id="user-login-form">
+            <div class="tab-content active" id="user-tab">
+                <div class="form-group">
+                    <label for="user-username">Username</label>
+                    <input type="text" id="user-username" name="username" required placeholder="Enter your username" autocomplete="username">
                 </div>
+                
+                <div class="form-group">
+                    <label for="user-password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="user-password" name="password" required placeholder="Enter your password" autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('user-password', this)">👁️</button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-btn">Login as User</button>
             </div>
-
-            <div class="auth-links" style="padding: 0 30px 30px 30px;">
-                <a href="/register" class="auth-link">Create Account</a>
-                <a href="/" class="auth-link">Back to Home</a>
+        </form>
+        
+        <form method="post" id="admin-login-form">
+            <div class="tab-content" id="admin-tab">
+                <div class="form-group">
+                    <label for="admin-username">Admin Username</label>
+                    <input type="text" id="admin-username" name="username" required placeholder="Enter admin username" autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin-password">Admin Password</label>
+                    <div class="password-container">
+                        <input type="password" id="admin-password" name="password" required placeholder="Enter admin password" autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('admin-password', this)">👁️</button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-btn">Login as Admin</button>
             </div>
+        </form>
+        
+        <script>
+            function switchTab(tab) {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Remove active class from all tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Show selected tab content
+                document.getElementById(tab + '-tab').classList.add('active');
+                
+                // Add active class to clicked button
+                event.target.classList.add('active');
+            }
+            
+            function togglePassword(inputId, button) {
+                const input = document.getElementById(inputId);
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    button.textContent = '🙈';
+                } else {
+                    input.type = 'password';
+                    button.textContent = '👁️';
+                }
+            }
+        </script>
+        
+        <div class="divider">
+            <span>or</span>
+        </div>
+        
+        <div class="login-links">
+            <a href="register.php">Create Account</a>
+            <a href="/">Back to Home</a>
         </div>
     </div>
-
-    <script>
-        function useCurrentLocation() {
-            const statusDiv = document.getElementById('location-status');
-            const locationInput = document.getElementById('user_location');
-            const button = event.target;
-            
-            statusDiv.textContent = 'Getting your location...';
-            button.disabled = true;
-            button.textContent = '📍 Detecting...';
-            
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        // Store location in hidden input
-                        locationInput.value = lat + ',' + lng;
-                        
-                        // Show success message
-                        statusDiv.innerHTML = '✅ Location detected successfully!';
-                        statusDiv.style.color = '#28a745';
-                        button.textContent = '📍 Location Detected';
-                        button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-                    },
-                    function(error) {
-                        let errorMessage = '❌ Unable to get location';
-                        
-                        switch(error.code) {
-                            case error.PERMISSION_DENIED:
-                                errorMessage = '❌ Location permission denied';
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                errorMessage = '❌ Location information unavailable';
-                                break;
-                            case error.TIMEOUT:
-                                errorMessage = '❌ Location request timed out';
-                                break;
-                        }
-                        
-                        statusDiv.textContent = errorMessage;
-                        statusDiv.style.color = '#dc3545';
-                        button.disabled = false;
-                        button.textContent = '📍 Use My Current Location';
-                    }
-                );
-            } else {
-                statusDiv.textContent = '❌ Geolocation not supported by your browser';
-                statusDiv.style.color = '#dc3545';
-                button.disabled = false;
-                button.textContent = '📍 Use My Current Location';
-            }
-        }
-        
-        function switchTab(tab) {
-            // Hide all tabs
-            document.getElementById('user-tab').classList.remove('active');
-            document.getElementById('admin-tab').classList.remove('active');
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-            
-            // Show selected tab
-            document.getElementById(tab + '-tab').classList.add('active');
-            
-            // Add active class to clicked tab button
-            event.target.classList.add('active');
-        }
-    </script>
 </body>
 </html>

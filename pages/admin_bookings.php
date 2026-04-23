@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Handle logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: /');
+    exit();
+}
+
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: /login');
@@ -443,7 +450,7 @@ $allUsers = getAllUsers();
             <div>
                 <a href="/index" class="nav-btn"> Search Futsals</a>
                 <a href="/my_bookings" class="nav-btn"> My Bookings</a>
-                <a href="/logout" class="nav-btn">Logout</a>
+                <a href="?logout=1" class="nav-btn">Logout</a>
             </div>
         </div>
     </div>
