@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: /index');
-    exit();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -27,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['is_admin']) {
                 header('Location: /admin_bookings');
             } else {
-                header('Location: /index');
+                header('Location: /profile');
             }
             exit();
         } else {
@@ -359,7 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <div class="login-links">
-            <a href="register.php">Create Account</a>
+            <a href="/register">Create Account</a>
             <a href="/">Back to Home</a>
         </div>
     </div>

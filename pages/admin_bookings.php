@@ -185,7 +185,7 @@ $allUsers = getAllUsers();
         }
         
         .admin-header {
-            background: linear-gradient(135deg, #dc3545, #c82333);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
             padding: 20px;
             margin: -30px -30px 20px -30px;
@@ -239,7 +239,7 @@ $allUsers = getAllUsers();
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             border: 1px solid #f0f0f0;
-            border-left: 4px solid #dc3545;
+            border-left: 4px solid #1e3c72;
         }
         
         .booking-card:hover {

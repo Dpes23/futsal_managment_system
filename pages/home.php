@@ -83,23 +83,23 @@ if (isset($_GET['logout'])) {
 
         .nav-btn.login {
             background-color: transparent;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #1e3c72;
+            border: 2px solid #1e3c72;
         }
 
         .nav-btn.login:hover {
-            background-color: #667eea;
+            background-color: #1e3c72;
             color: white;
         }
 
         .nav-btn.register {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
         }
 
         .nav-btn.register:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
         }
 
         /* Hero Section */
@@ -148,7 +148,7 @@ if (isset($_GET['logout'])) {
 
         .hero-btn.primary {
             background: white;
-            color: #667eea;
+            color: #1e3c72;
         }
 
         .hero-btn.primary:hover {
@@ -164,7 +164,7 @@ if (isset($_GET['logout'])) {
 
         .hero-btn.secondary:hover {
             background: white;
-            color: #667eea;
+            color: #1e3c72;
         }
 
         /* Content Section */
@@ -197,7 +197,7 @@ if (isset($_GET['logout'])) {
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             text-align: center;
             transition: all 0.3s;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #1e3c72;
         }
 
         .feature-card:hover {
@@ -212,7 +212,7 @@ if (isset($_GET['logout'])) {
 
         .feature-card h3 {
             font-size: 22px;
-            color: #667eea;
+            color: #1e3c72;
             margin-bottom: 15px;
             font-weight: 700;
         }
@@ -652,22 +652,13 @@ if (isset($_GET['logout'])) {
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="home.php" class="nav-logo">
+            <a href="/" class="nav-logo">
                 <span>⚽</span>
                 Futsal Recommendation System
             </a>
             <div class="nav-buttons">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="?logout=1" class="nav-btn login">Logout (<?= htmlspecialchars($_SESSION['username'] ?? 'User') ?>)</a>
-                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                        <a href="admin_bookings.php" class="nav-btn register">Admin Panel</a>
-                    <?php else: ?>
-                        <a href="my_bookings.php" class="nav-btn register">My Bookings</a>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <a href="login.php" class="nav-btn login">Login</a>
-                    <a href="register.php" class="nav-btn register">Register</a>
-                <?php endif; ?>
+                <a href="/login" class="nav-btn login">Login</a>
+                <a href="/register" class="nav-btn register">Register</a>
             </div>
         </div>
     </nav>
@@ -678,7 +669,7 @@ if (isset($_GET['logout'])) {
             <h1>Find & Book Your Perfect Futsal Court</h1>
             <p>Discover the best futsal courts near you with intelligent recommendations based on location, ratings, and prices.</p>
             <div class="hero-buttons">
-                <a href="login.php" class="hero-btn primary">Get Started</a>
+                <a href="/login" class="hero-btn primary">Get Started</a>
                 <a href="#features" class="hero-btn secondary">Learn More</a>
             </div>
         </div>
@@ -751,10 +742,10 @@ if (isset($_GET['logout'])) {
                             
                             <div class="contact-info">
                                 <div class="contact-buttons">
-                                    <a href="login.php" class="call-btn">
+                                    <a href="/login" class="call-btn">
                                         &#128222; Call Now
                                     </a>
-                                    <a href="login.php" class="view-all-btn">
+                                    <a href="/login" class="view-all-btn">
                                         View All
                                     </a>
                                 </div>
@@ -765,7 +756,7 @@ if (isset($_GET['logout'])) {
             </div>
             
             <div style="text-align: center; margin-top: 40px;">
-                <a href="login.php" class="view-all-btn-large">
+                <a href="/login" class="view-all-btn-large">
                     &#128196; View All Futsal Contacts (Login Required)
                 </a>
             </div>
@@ -887,8 +878,8 @@ if (isset($_GET['logout'])) {
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <a href="login.php" class="btn-primary">Login to Your Account</a>
-            <a href="register.php" class="btn-secondary">Create New Account</a>
+            <a href="/login" class="btn-primary">Login to Your Account</a>
+            <a href="/register" class="btn-secondary">Create New Account</a>
         </div>
     </div>
 

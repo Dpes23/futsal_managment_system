@@ -289,7 +289,7 @@ if (!$selectedFutsal && isset($_GET['futsal'])) {
                 <h3>🏐 Book a Futsal</h3>
                 <p><?= htmlspecialchars($_SESSION['full_name']) ?></p>
             </div>
-            <a href="/index" class="back-btn">← Back to Search</a>
+            <a href="/futsals" class="back-btn">← Back to Search</a>
         </div>
     </div>
     

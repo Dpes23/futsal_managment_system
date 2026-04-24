@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: /index');
-    exit();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -16,6 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (empty($username) || empty($email) || empty($password) || empty($full_name)) {
         $error = 'All fields are required';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Please enter a valid email address';
+    } elseif (!empty($mobile) && !preg_match('/^[0-9]{10}$/', $mobile)) {
+        $error = 'Mobile number must be exactly 10 digits';
+    } elseif (strlen($password) < 8) {
+        $error = 'Password must be at least 8 characters long';
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error = 'Password must contain at least one uppercase letter';
+    } elseif (!preg_match('/[a-z]/', $password)) {
+        $error = 'Password must contain at least one lowercase letter';
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = 'Password must contain at least one number';
+    } elseif (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+        $error = 'Password must contain at least one special character';
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match';
     } else {
@@ -265,22 +274,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="post">
             <div class="form-group">
                 <label for="full_name">Full Name</label>
-                <input type="text" id="full_name" name="full_name" required placeholder="Enter your full name" autocomplete="name">
+                <input type="text" id="full_name" name="full_name" required placeholder="Enter your full name" autocomplete="name" value="<?= htmlspecialchars($full_name ?? '') ?>">
             </div>
             
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required placeholder="Choose a username" autocomplete="username">
+                <input type="text" id="username" name="username" required placeholder="Choose a username" autocomplete="username" value="<?= htmlspecialchars($username ?? '') ?>">
             </div>
             
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email" autocomplete="email">
+                <input type="email" id="email" name="email" required placeholder="Enter your email" autocomplete="email" value="<?= htmlspecialchars($email ?? '') ?>">
             </div>
             
             <div class="form-group">
                 <label for="mobile">Mobile Number</label>
-                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" autocomplete="tel">
+                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" autocomplete="tel" value="<?= htmlspecialchars($mobile ?? '') ?>" maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
             </div>
             
             <div class="form-group">
@@ -307,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <div class="register-links">
-            <a href="login.php">Login</a>
+            <a href="/login">Login</a>
             <a href="/">Back to Home</a>
         </div>
     </div>

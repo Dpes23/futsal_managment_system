@@ -16,6 +16,17 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once __DIR__ . '/../includes/functions.php';
 
+// Handle booking cancellation
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
+    $bookingId = $_POST['booking_id'] ?? '';
+    
+    if ($bookingId && cancelBooking($bookingId, $_SESSION['user_id'])) {
+        $cancelMessage = "Booking cancelled successfully!";
+    } else {
+        $cancelError = "Failed to cancel booking. Please try again.";
+    }
+}
+
 $userBookings = getUserBookings($_SESSION['user_id']);
 ?>
 
@@ -213,13 +224,25 @@ $userBookings = getUserBookings($_SESSION['user_id']);
                 <p><?= htmlspecialchars($_SESSION['full_name']) ?></p>
             </div>
             <div>
-                <a href="/index" class="nav-btn">🔍 Search Futsals</a>
-                <a href="?logout=1" class="nav-btn">Logout</a>
+                <a href="/profile" class="nav-btn">👤 My Profile</a>
+                <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
             </div>
         </div>
     </div>
     
     <h2>Your Futsal Bookings</h2>
+    
+    <?php if (isset($cancelMessage)): ?>
+        <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <?= htmlspecialchars($cancelMessage) ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (isset($cancelError)): ?>
+        <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <?= htmlspecialchars($cancelError) ?>
+        </div>
+    <?php endif; ?>
     
     <?php if (empty($userBookings)): ?>
         <div class="no-bookings">
@@ -270,6 +293,17 @@ $userBookings = getUserBookings($_SESSION['user_id']);
                 </div>
                 
                 <div style="text-align: right; margin-top: 15px;">
+                    <?php if ($booking['status'] === 'confirmed'): ?>
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="booking_id" value="<?= $booking['id'] ?>">
+                            <input type="hidden" name="cancel_booking" value="1">
+                            <button type="submit" class="cancel-btn" 
+                                    onclick="return confirm('Are you sure you want to cancel this booking?')"
+                                    style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; margin-right: 10px;">
+                                ❌ Cancel Booking
+                            </button>
+                        </form>
+                    <?php endif; ?>
                     <small style="color: #666;">
                         Booking ID: #<?= str_pad($booking['id'], 6, '0', STR_PAD_LEFT) ?> | 
                         Booked on: <?= date('M d, Y h:i A', strtotime($booking['created_at'])) ?>

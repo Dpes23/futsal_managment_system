@@ -62,36 +62,58 @@ try {
         }
         
         .profile-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-            padding: 30px;
+            padding: 20px 30px;
             margin: -30px -30px 30px -30px;
             border-radius: 20px 20px 0 0;
-            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            margin: 0 auto 20px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 40px;
+            gap: 20px;
         }
         
-        .profile-header h1 {
+        .user-info h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 600;
         }
         
-        .profile-header p {
+        .user-info p {
             margin: 5px 0 0 0;
             opacity: 0.9;
-            font-size: 16px;
+            font-size: 14px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-buttons-left {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
         }
         
         .nav-buttons {
@@ -129,7 +151,7 @@ try {
         }
         
         .section-title {
-            color: #333;
+            color: #1e3c72;
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 20px;
@@ -235,14 +257,21 @@ try {
 
 <div class="container">
     <div class="profile-header">
-        <div class="profile-avatar">??</div>
-        <h1><?= htmlspecialchars($user['full_name']) ?></h1>
-        <p>@<?= htmlspecialchars($user['username']) ?></p>
-        
-        <div class="nav-buttons">
-            <a href="/index" class="nav-btn">?? Search Futsals</a>
-            <a href="/my_bookings" class="nav-btn">?? My Bookings</a>
-            <a href="?logout=1" class="nav-btn">Logout</a>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="profile-avatar">👤</div>
+                <div class="user-info">
+                    <h1><?= htmlspecialchars($user['full_name']) ?></h1>
+                    <p>@<?= htmlspecialchars($user['username']) ?></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="nav-buttons-left">
+                    <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
+                    <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
+                </div>
+                <a href="?logout=1" class="nav-btn logout-btn">Logout</a>
+            </div>
         </div>
     </div>
     
@@ -256,7 +285,6 @@ try {
         <h2 class="section-title">Personal Information</h2>
         <div class="info-grid">
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">Full Name</div>
                     <div class="info-value"><?= htmlspecialchars($user['full_name']) ?></div>
@@ -264,7 +292,6 @@ try {
             </div>
             
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">Username</div>
                     <div class="info-value"><?= htmlspecialchars($user['username']) ?></div>
@@ -272,7 +299,6 @@ try {
             </div>
             
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">Email Address</div>
                     <div class="info-value"><?= htmlspecialchars($user['email']) ?></div>
@@ -280,7 +306,6 @@ try {
             </div>
             
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">Mobile Number</div>
                     <div class="info-value"><?= !empty($user['mobile']) ? htmlspecialchars($user['mobile']) : 'Not provided' ?></div>
@@ -288,7 +313,6 @@ try {
             </div>
             
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">Member Since</div>
                     <div class="info-value"><?= date('F d, Y', strtotime($user['created_at'])) ?></div>
@@ -296,7 +320,6 @@ try {
             </div>
             
             <div class="info-item">
-                <div class="info-icon">??</div>
                 <div class="info-content">
                     <div class="info-label">User ID</div>
                     <div class="info-value">#<?= str_pad($user['id'], 6, '0', STR_PAD_LEFT) ?></div>
