@@ -4,7 +4,7 @@ session_start();
 // Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: /');
+    header('Location: /login');
     exit();
 }
 

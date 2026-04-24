@@ -221,6 +221,54 @@ usort($nonRecommendedFutsals, function($a, $b) {
             color: #000;
             font-weight: 600;
         }
+        
+        .location-input-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .location-input-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        
+        .location-input-section p {
+            margin: 5px 0 15px 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .location-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .location-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .location-form button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .location-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -258,25 +306,23 @@ usort($nonRecommendedFutsals, function($a, $b) {
                     </a>
                     
                     <div class="detail-item">
-                        <div class="detail-label">📞 Mobile</div>
-                        <div class="detail-value"><?= htmlspecialchars($futsal['phone']) ?></div>
+                        <div class="detail-label">Mobile</div>
+                        <div class="detail-value">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
                     </div>
                     
                     <div class="detail-item">
-                        <div class="detail-label">💰 Price</div>
-                        <div class="detail-value">Rs. <?= number_format($futsal['price']) ?>/hr</div>
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value">💰 Rs. <?= number_format($futsal['price']) ?>/hr</div>
                     </div>
                     
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=<?= $futsal['lat'] ?>,<?= $futsal['lng'] ?>" target="_blank" class="detail-item clickable" style="text-decoration: none;">
-                        <div class="detail-label">📏 Distance</div>
-                        <div class="detail-value" style="color: #1e3c72; font-weight: 500;">
-                            <?= $distance ?> km 🗺️
-                        </div>
-                    </a>
+                    <div class="detail-item">
+                        <div class="detail-label">Distance</div>
+                        <div class="detail-value">📏 <?= $distance ?> km</div>
+                    </div>
                     
                     <div class="detail-item">
-                        <div class="detail-label">⭐ Rating</div>
-                        <div class="detail-value"><span style="color: #ffc107;">⭐</span> <?= $futsal['rating'] ?></div>
+                        <div class="detail-label">Rating</div>
+                        <div class="detail-value">⭐ <?= $futsal['rating'] ?></div>
                     </div>
                 </div>
                 
@@ -303,25 +349,23 @@ usort($nonRecommendedFutsals, function($a, $b) {
                     </a>
                     
                     <div class="detail-item">
-                        <div class="detail-label">📞 Mobile</div>
-                        <div class="detail-value"><?= htmlspecialchars($futsal['phone']) ?></div>
+                        <div class="detail-label">Mobile</div>
+                        <div class="detail-value">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
                     </div>
                     
                     <div class="detail-item">
-                        <div class="detail-label">💰 Price</div>
-                        <div class="detail-value">Rs. <?= number_format($futsal['price']) ?>/hr</div>
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value">💰 Rs. <?= number_format($futsal['price']) ?>/hr</div>
                     </div>
                     
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=<?= $futsal['lat'] ?>,<?= $futsal['lng'] ?>" target="_blank" class="detail-item clickable" style="text-decoration: none;">
-                        <div class="detail-label">📏 Distance</div>
-                        <div class="detail-value" style="color: #1e3c72; font-weight: 500;">
-                            <?= $distance ?> km 🗺️
-                        </div>
-                    </a>
+                    <div class="detail-item">
+                        <div class="detail-label">Distance</div>
+                        <div class="detail-value">📏 <?= $distance ?> km</div>
+                    </div>
                     
                     <div class="detail-item">
-                        <div class="detail-label">⭐ Rating</div>
-                        <div class="detail-value"><span style="color: #ffc107;">⭐</span> <?= $futsal['rating'] ?></div>
+                        <div class="detail-label">Rating</div>
+                        <div class="detail-value">⭐ <?= $futsal['rating'] ?></div>
                     </div>
                 </div>
                 

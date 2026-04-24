@@ -4,7 +4,7 @@ session_start();
 // Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: /');
+    header('Location: /login');
     exit();
 }
 
@@ -266,11 +266,15 @@ try {
                 </div>
             </div>
             <div class="header-right">
-                <div class="nav-buttons-left">
-                    <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
-                    <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
-                </div>
-                <a href="?logout=1" class="nav-btn logout-btn">Logout</a>
+                <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                    <a href="/admin_bookings" class="nav-btn">⬅️ Back to Admin Panel</a>
+                <?php else: ?>
+                    <div class="nav-buttons-left">
+                        <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
+                        <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
+                    </div>
+                    <a href="?logout=1" class="nav-btn logout-btn">Logout</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

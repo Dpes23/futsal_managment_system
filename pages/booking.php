@@ -344,11 +344,25 @@ if (!$selectedFutsal && isset($_GET['futsal'])) {
         <?php endif; ?>
         
         <?php if ($selectedFutsal): ?>
+            <?php 
+            // Calculate distance if user location is set
+            $distance = '';
+            if (isset($_SESSION['user_location'])) {
+                // For now, use default Kathmandu coordinates as base
+                // In a real app, you'd geocode the user's location to coordinates
+                $userLat = 27.7172;
+                $userLon = 85.3240;
+                $distance = round(calculateDistance($userLat, $userLon, $selectedFutsal['lat'], $selectedFutsal['lng']), 1) . ' km';
+            }
+            ?>
             <div class="futsal-info">
                 <h3><?= htmlspecialchars($selectedFutsal['name']) ?></h3>
                 <p><strong>📍 Location:</strong> <?= htmlspecialchars($selectedFutsal['address']) ?></p>
+                <?php if ($distance): ?>
+                    <p><strong>📏 Distance:</strong> <?= $distance ?></p>
+                <?php endif; ?>
                 <p><strong>💰 Price:</strong> Rs. <?= number_format($selectedFutsal['price']) ?>/hour</p>
-                <p><strong>⭐ Rating:</strong> <?= $selectedFutsal['rating'] ?> ★</p>
+                <p><strong>⭐ Rating:</strong> <?= $selectedFutsal['rating'] ?></p>
                 <p><strong>📞 Phone:</strong> 
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="tel:<?= htmlspecialchars($selectedFutsal['phone']) ?>" 
