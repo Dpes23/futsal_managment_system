@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Handle logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: /login');
+    exit();
+}
+
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: /login');
@@ -113,6 +120,68 @@ usort($nonRecommendedFutsals, function($a, $b) {
             text-decoration: none;
             color: white;
             transform: translateY(-2px);
+        }
+        
+        .settings-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            z-index: 1;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-content a.logout {
+            color: #dc3545;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .dropdown-content a.logout:hover {
+            background-color: #fee;
+        }
+        
+        .show {
+            display: block;
         }
         
         .futsals-grid {
@@ -281,8 +350,15 @@ usort($nonRecommendedFutsals, function($a, $b) {
                 <p>Book your preferred futsal court</p>
             </div>
             <div class="header-right">
-                <a href="/profile" class="nav-btn">👤 My Profile</a>
                 <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
+                <div class="settings-dropdown">
+                    <button class="settings-btn" onclick="toggleDropdown()">⚙️ Settings</button>
+                    <div id="settingsDropdown" class="dropdown-content">
+                        <a href="/profile">👤 My Profile</a>
+                        <a href="/change_password">🔒 Change Password</a>
+                        <a href="?logout=1" class="logout">🚪 Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -376,6 +452,25 @@ usort($nonRecommendedFutsals, function($a, $b) {
         <?php endforeach; ?>
     </div>
 </div>
+
+<script>
+function toggleDropdown() {
+    document.getElementById("settingsDropdown").classList.toggle("show");
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event) {
+    if (!event.target.matches('.settings-btn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+</script>
 
 </body>
 </html>

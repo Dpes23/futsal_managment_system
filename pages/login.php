@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['is_admin']) {
                 header('Location: /admin_bookings');
             } else {
-                header('Location: /profile');
+                header('Location: /futsals');
             }
             exit();
         } else {
@@ -296,6 +296,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <button type="submit" class="login-btn">Login as User</button>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="/forgot_password" style="color: #667eea; text-decoration: none; font-size: 14px;">Forgot Password?</a>
+                </div>
             </div>
         </form>
         

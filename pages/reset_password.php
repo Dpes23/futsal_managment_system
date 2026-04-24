@@ -1,72 +1,57 @@
 <?php
 session_start();
 
-// Handle logout
-if (isset($_GET['logout'])) {
-    session_destroy();
-    header('Location: /login');
-    exit();
-}
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: /login');
-    exit();
-}
-
 require_once __DIR__ . '/../config/database.php';
 $pdo = getDatabaseConnection();
 
 $error = '';
 $success = '';
 
-// Handle password change
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
-    $currentPassword = $_POST['current_password'] ?? '';
+// Add password_reset_token column if it doesn't exist
+try {
+    $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS password_reset_token VARCHAR(255) DEFAULT NULL");
+    $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS password_reset_expires DATETIME DEFAULT NULL");
+} catch (PDOException $e) {
+    // Column might already exist
+}
+
+// Handle password reset
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
+    $resetToken = $_POST['reset_token'] ?? '';
     $newPassword = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
     
-    // Validate inputs
-    if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+    if (empty($resetToken) || empty($newPassword) || empty($confirmPassword)) {
         $error = 'All fields are required.';
     } elseif (strlen($newPassword) < 6) {
         $error = 'New password must be at least 6 characters long.';
     } elseif ($newPassword !== $confirmPassword) {
         $error = 'New password and confirm password do not match.';
     } else {
-        // Get current user's password
+        // Check if reset token is valid
         try {
-            $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
-            $stmt->execute([$_SESSION['user_id']]);
+            $stmt = $pdo->prepare("SELECT id, password_reset_expires FROM users WHERE password_reset_token = ?");
+            $stmt->execute([$resetToken]);
             $user = $stmt->fetch();
             
-            if ($user && password_verify($currentPassword, $user['password'])) {
-                // Update password
-                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-                $stmt->execute([$hashedPassword, $_SESSION['user_id']]);
-                $success = 'Password changed successfully!';
+            if ($user) {
+                // Check if token has expired
+                if (strtotime($user['password_reset_expires']) < time()) {
+                    $error = 'Reset token has expired. Please request a new one.';
+                } else {
+                    // Update password
+                    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                    $stmt = $pdo->prepare("UPDATE users SET password = ?, password_reset_token = NULL, password_reset_expires = NULL WHERE id = ?");
+                    $stmt->execute([$hashedPassword, $user['id']]);
+                    $success = 'Password reset successfully! You can now login with your new password.';
+                }
             } else {
-                $error = 'Current password is incorrect.';
+                $error = 'Invalid reset token. Please check and try again.';
             }
         } catch(PDOException $e) {
             $error = 'An error occurred. Please try again.';
         }
     }
-}
-
-// Get user details
-try {
-    $stmt = $pdo->prepare("SELECT id, username, email, full_name, mobile, created_at FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch();
-    
-    if (!$user) {
-        header('Location: /login');
-        exit();
-    }
-} catch(PDOException $e) {
-    $error = 'Failed to load user data.';
 }
 ?>
 <!DOCTYPE html>
@@ -74,7 +59,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password - Futsal Recommendation System</title>
+    <title>Reset Password - Futsal Recommendation System</title>
     <style>
         * {
             margin: 0;
@@ -86,104 +71,47 @@ try {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 450px;
+            width: 100%;
         }
         
-        .profile-header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .profile-avatar {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-        
-        .user-info h1 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .user-info p {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .header-right {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .nav-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .profile-section {
+        .reset-password-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
         }
         
-        .section-title {
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .card-header h1 {
             font-size: 28px;
             color: #333;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .card-header p {
+            color: #666;
+            font-size: 14px;
         }
         
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #333;
             font-size: 14px;
@@ -191,7 +119,7 @@ try {
         
         .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 15px;
@@ -226,7 +154,7 @@ try {
         .alert {
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 14px;
         }
         
@@ -246,7 +174,7 @@ try {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 13px;
         }
         
@@ -301,57 +229,57 @@ try {
         .toggle-password:hover {
             color: #667eea;
         }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="profile-header">
-        <div class="header-content">
-            <div class="header-left">
-                <h1>Change Password</h1>
+    <div class="reset-password-card">
+        <div class="card-header">
+            <h1>🔑 Reset Password</h1>
+            <p>Enter your reset code and new password</p>
+        </div>
+        
+        <?php if ($error): ?>
+            <div class="alert alert-error">
+                <?= htmlspecialchars($error) ?>
             </div>
-            <div class="header-right">
-                <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                    <a href="/admin_bookings" class="nav-btn">⬅️ Back to Admin Panel</a>
-                <?php else: ?>
-                    <a href="/futsals" class="nav-btn">⬅️ Dashboard</a>
-                <?php endif; ?>
+        <?php endif; ?>
+        
+        <?php if ($success): ?>
+            <div class="alert alert-success">
+                <?= $success ?>
             </div>
-        </div>
-    </div>
-    
-    <?php if ($error): ?>
-        <div class="alert alert-error">
-            <?= htmlspecialchars($error) ?>
-        </div>
-    <?php endif; ?>
-    
-    <?php if ($success): ?>
-        <div class="alert alert-success">
-            <?= htmlspecialchars($success) ?>
-        </div>
-    <?php endif; ?>
-    
-    <div class="profile-section">
-        <h2 class="section-title">🔒 Change Password</h2>
+        <?php endif; ?>
         
         <div class="password-requirements">
             <h4>Password Requirements:</h4>
             <ul>
                 <li>Minimum 6 characters long</li>
-                <li>Must match current password</li>
                 <li>New password and confirmation must match</li>
             </ul>
         </div>
         
         <form method="POST">
             <div class="form-group">
-                <label for="current_password">Current Password *</label>
-                <div class="password-wrapper">
-                    <input type="password" id="current_password" name="current_password" required>
-                    <button type="button" class="toggle-password" onclick="togglePassword('current_password')">👁️</button>
-                </div>
+                <label for="reset_token">Reset Code *</label>
+                <input type="text" id="reset_token" name="reset_token" required placeholder="Enter the reset code from your email">
             </div>
             
             <div class="form-group">
@@ -370,10 +298,14 @@ try {
                 </div>
             </div>
             
-            <button type="submit" name="change_password" value="1" class="submit-btn">
-                ✅ Change Password
+            <button type="submit" name="reset_password" value="1" class="submit-btn">
+                ✅ Reset Password
             </button>
         </form>
+        
+        <div class="back-link">
+            <a href="/login">← Back to Login</a>
+        </div>
     </div>
 </div>
 

@@ -142,6 +142,68 @@ try {
             transform: translateY(-2px);
         }
         
+        .settings-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            z-index: 1;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-content a.logout {
+            color: #dc3545;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .dropdown-content a.logout:hover {
+            background-color: #fee;
+        }
+        
+        .show {
+            display: block;
+        }
+        
         .profile-section {
             background: white;
             border-radius: 15px;
@@ -269,11 +331,7 @@ try {
                 <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
                     <a href="/admin_bookings" class="nav-btn">⬅️ Back to Admin Panel</a>
                 <?php else: ?>
-                    <div class="nav-buttons-left">
-                        <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
-                        <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
-                    </div>
-                    <a href="?logout=1" class="nav-btn logout-btn">Logout</a>
+                    <a href="/futsals" class="nav-btn">⬅️ Dashboard</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -381,6 +439,25 @@ try {
         </div>
     </div>
 </div>
+
+<script>
+function toggleDropdown() {
+    document.getElementById("settingsDropdown").classList.toggle("show");
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event) {
+    if (!event.target.matches('.settings-btn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+</script>
 
 </body>
 </html>
