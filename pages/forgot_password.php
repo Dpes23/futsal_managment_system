@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['forgot_password'])) {
                 $stmt->execute([$resetToken, $resetExpires, $user['id']]);
                 
                 // Display code on screen (for development/testing)
-                $success = 'Password reset code generated. Your reset code is: <strong>' . $resetToken . '</strong><br><br>This code will expire in 1 hour.';
+                $success = 'Password reset code generated. Your reset code is: <strong>' . $resetToken . '</strong><br><br>This code will expire in 1 hour.<br><br><a href="/reset_password" style="color: #667eea; font-weight: 600;">Click here to reset your password</a>';
             } else {
                 $error = 'Your email is not registered.';
             }

@@ -229,25 +229,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .divider {
             text-align: center;
             margin: 25px 0;
-            position: relative;
-        }
-        
-        .divider::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 100%;
-            height: 1px;
-            background: #e0e0e0;
         }
         
         .divider span {
-            background: white;
-            padding: 0 15px;
             color: #999;
             font-size: 12px;
-            position: relative;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        
+        .register-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .register-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .register-links a:hover {
+            text-decoration: none;
+            color: #764ba2;
         }
     </style>
 </head>
@@ -311,13 +318,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="register-btn">Create Account</button>
         </form>
         
-        <div class="divider">
-            <span>or</span>
-        </div>
-        
         <div class="register-links">
-            <a href="/login">Login</a>
-            <a href="/">Back to Home</a>
+            <a href="/">← Back to Home</a>
+            <a href="/login">Login →</a>
         </div>
     </div>
     

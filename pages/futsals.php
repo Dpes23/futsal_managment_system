@@ -346,8 +346,8 @@ usort($nonRecommendedFutsals, function($a, $b) {
     <div class="page-header">
         <div class="header-content">
             <div class="header-left">
-                <h1>⚽ Futsal Courts</h1>
-                <p>Book your preferred futsal court</p>
+                <h1>🏟️ Futsal Courts</h1>
+                <p>Find the best futsal courts near you</p>
             </div>
             <div class="header-right">
                 <a href="/my_bookings" class="nav-btn">📅 My Bookings</a>
@@ -363,6 +363,14 @@ usort($nonRecommendedFutsals, function($a, $b) {
         </div>
     </div>
     
+    <div class="location-input-section">
+        <h3>📍 Your Location</h3>
+        <p>Get accurate distances to futsal courts by allowing location access</p>
+        <div class="location-form">
+            <button type="button" onclick="getUserLocation()">📍 Get My Location</button>
+        </div>
+    </div>
+    
     <div class="futsals-grid">
         <?php 
         // Display recommended futsals first
@@ -371,38 +379,40 @@ usort($nonRecommendedFutsals, function($a, $b) {
         ?>
             <div class="futsal-card">
                 <div class="recommendation-badge">🏆 Recommended</div>
-                <h3><?= htmlspecialchars($futsal['name']) ?></h3>
+                <h3><?php echo htmlspecialchars($futsal['name']); ?></h3>
                 
                 <div class="futsal-details">
-                    <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($futsal['address']) ?>" target="_blank" class="detail-item clickable" style="text-decoration: none;">
+                    <div class="detail-item">
                         <div class="detail-label">📍 Location</div>
-                        <div class="detail-value" style="color: #1e3c72; font-weight: 500;">
-                            <?= htmlspecialchars($futsal['address']) ?> 🗺️
+                        <div class="detail-value">
+                            <a href="https://www.google.com/maps/search/?api=1&query=<?php echo urlencode($futsal['name'] . ' futsal ' . $futsal['address']); ?>" target="_blank" style="color: #1e3c72; font-weight: 500; text-decoration: none;">
+                                <?php echo htmlspecialchars($futsal['address']); ?> 🗺️
+                            </a>
                         </div>
-                    </a>
+                    </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Mobile</div>
-                        <div class="detail-value">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
+                        <div class="detail-value">📞 <?php echo htmlspecialchars($futsal['phone']); ?></div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Price</div>
-                        <div class="detail-value">💰 Rs. <?= number_format($futsal['price']) ?>/hr</div>
+                        <div class="detail-value">💰 Rs. <?php echo number_format($futsal['price']); ?>/hr</div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Distance</div>
-                        <div class="detail-value">📏 <?= $distance ?> km</div>
+                        <div class="detail-value">📏 <?php echo $distance; ?> km</div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Rating</div>
-                        <div class="detail-value">⭐ <?= $futsal['rating'] ?></div>
+                        <div class="detail-value">⭐ <?php echo $futsal['rating']; ?></div>
                     </div>
                 </div>
                 
-                <a href="/booking?futsal=<?= urlencode($futsal['name']) ?>" class="book-btn">
+                <a href="/booking?futsal=<?php echo urlencode($futsal['name']); ?>" class="book-btn">
                     📖 Book Now
                 </a>
             </div>
@@ -414,38 +424,40 @@ usort($nonRecommendedFutsals, function($a, $b) {
             $distance = round(calculateDistance($userLat, $userLon, $futsal['lat'], $futsal['lng']), 1);
         ?>
             <div class="futsal-card">
-                <h3><?= htmlspecialchars($futsal['name']) ?></h3>
+                <h3><?php echo htmlspecialchars($futsal['name']); ?></h3>
                 
                 <div class="futsal-details">
-                    <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($futsal['address']) ?>" target="_blank" class="detail-item clickable" style="text-decoration: none;">
+                    <div class="detail-item">
                         <div class="detail-label">📍 Location</div>
-                        <div class="detail-value" style="color: #1e3c72; font-weight: 500;">
-                            <?= htmlspecialchars($futsal['address']) ?> 🗺️
+                        <div class="detail-value">
+                            <a href="https://www.google.com/maps/search/?api=1&query=<?php echo urlencode($futsal['name'] . ' futsal ' . $futsal['address']); ?>" target="_blank" style="color: #1e3c72; font-weight: 500; text-decoration: none;">
+                                <?php echo htmlspecialchars($futsal['address']); ?> 🗺️
+                            </a>
                         </div>
-                    </a>
+                    </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Mobile</div>
-                        <div class="detail-value">📞 <?= htmlspecialchars($futsal['phone']) ?></div>
+                        <div class="detail-value">📞 <?php echo htmlspecialchars($futsal['phone']); ?></div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Price</div>
-                        <div class="detail-value">💰 Rs. <?= number_format($futsal['price']) ?>/hr</div>
+                        <div class="detail-value">💰 Rs. <?php echo number_format($futsal['price']); ?>/hr</div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Distance</div>
-                        <div class="detail-value">📏 <?= $distance ?> km</div>
+                        <div class="detail-value">📏 <?php echo $distance; ?> km</div>
                     </div>
                     
                     <div class="detail-item">
                         <div class="detail-label">Rating</div>
-                        <div class="detail-value">⭐ <?= $futsal['rating'] ?></div>
+                        <div class="detail-value">⭐ <?php echo $futsal['rating']; ?></div>
                     </div>
                 </div>
                 
-                <a href="/booking?futsal=<?= urlencode($futsal['name']) ?>" class="book-btn">
+                <a href="/booking?futsal=<?php echo urlencode($futsal['name']); ?>" class="book-btn">
                     📖 Book Now
                 </a>
             </div>
@@ -456,6 +468,46 @@ usort($nonRecommendedFutsals, function($a, $b) {
 <script>
 function toggleDropdown() {
     document.getElementById("settingsDropdown").classList.toggle("show");
+}
+
+// Get user's current location using geolocation API
+function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                
+                // Send location to server to update session
+                fetch('/pages/update_location.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'lat=' + lat + '&lon=' + lon
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    if (data.success) {
+                        alert('Location updated successfully! Distances will be recalculated.');
+                        // Reload page to recalculate distances
+                        window.location.href = '/futsals';
+                    } else {
+                        alert('Failed to update location. Please try again.');
+                    }
+                }).catch(function(error) {
+                    console.error('Error:', error);
+                    alert('Error updating location. Please try again.');
+                });
+            },
+            function(error) {
+                console.log('Geolocation error:', error.message);
+                alert('Unable to get your location. Using default location instead.');
+            }
+        );
+    } else {
+        alert('Geolocation is not supported by your browser.');
+    }
 }
 
 // Close dropdown when clicking outside

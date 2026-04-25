@@ -224,8 +224,7 @@ $userBookings = getUserBookings($_SESSION['user_id']);
                 <p><?= htmlspecialchars($_SESSION['full_name']) ?></p>
             </div>
             <div>
-                <a href="/profile" class="nav-btn">👤 My Profile</a>
-                <a href="/futsals" class="nav-btn">🔍 Search Futsals</a>
+                <a href="/futsals" class="nav-btn">← Dashboard</a>
             </div>
         </div>
     </div>

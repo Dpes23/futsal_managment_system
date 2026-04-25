@@ -8,7 +8,7 @@ return [
     ['name' => 'Royal Futsal',           'lat' => 27.700, 'lng' => 85.320, 'price' => 1600, 'rating' => 4.6, 'address' => 'New Baneshwor', 'phone' => '9852222222'],
     ['name' => 'Shantinagar Futsal',     'lat' => 27.690, 'lng' => 85.330, 'price' => 1100, 'rating' => 3.9, 'address' => 'Shantinagar', 'phone' => '9763333333'],
     ['name' => 'Prime Futsal',           'lat' => 27.715, 'lng' => 85.310, 'price' => 1500, 'rating' => 3.4, 'address' => 'Thapathali', 'phone' => '9844444444'],
-    ['name' => 'Boudha Futsal',          'lat' => 27.720, 'lng' => 85.360, 'price' => 1200, 'rating' => 4.2, 'address' => 'Boudha', 'phone' => '9855555555'],
+    ['name' => 'Futsal Arena Boudha',    'lat' => 27.720, 'lng' => 85.360, 'price' => 1200, 'rating' => 4.2, 'address' => 'Boudha', 'phone' => '9855555555'],
     ['name' => 'Patan Futsal Ground',    'lat' => 27.670, 'lng' => 85.320, 'price' => 1400, 'rating' => 3.3, 'address' => 'Patan', 'phone' => '9766666666'],
     ['name' => 'Kalanki Futsal',         'lat' => 27.690, 'lng' => 85.280, 'price' => 1000, 'rating' => 4.0, 'address' => 'Kalanki', 'phone' => '9847777777'],
     ['name' => 'Kamaladi Futsal',        'lat' => 27.705, 'lng' => 85.325, 'price' => 1350, 'rating' => 4.1, 'address' => 'Kamaladi', 'phone' => '9858888888'],

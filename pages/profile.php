@@ -329,9 +329,9 @@ try {
             </div>
             <div class="header-right">
                 <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                    <a href="/admin_bookings" class="nav-btn">⬅️ Back to Admin Panel</a>
+                    <a href="/admin_bookings" class="nav-btn">← Back to Admin Panel</a>
                 <?php else: ?>
-                    <a href="/futsals" class="nav-btn">⬅️ Dashboard</a>
+                    <a href="/futsals" class="nav-btn">← Dashboard</a>
                 <?php endif; ?>
             </div>
         </div>
