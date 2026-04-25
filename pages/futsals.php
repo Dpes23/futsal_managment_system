@@ -367,6 +367,7 @@ usort($nonRecommendedFutsals, function($a, $b) {
         <h3>📍 Your Location</h3>
         <p>Get accurate distances to futsal courts by allowing location access</p>
         <div class="location-form">
+            <input type="text" id="searchInput" placeholder="🔍 Search futsal by name..." onkeyup="searchFutsals()">
             <button type="button" onclick="getUserLocation()">📍 Get My Location</button>
         </div>
     </div>
@@ -468,6 +469,24 @@ usort($nonRecommendedFutsals, function($a, $b) {
 <script>
 function toggleDropdown() {
     document.getElementById("settingsDropdown").classList.toggle("show");
+}
+
+function searchFutsals() {
+    var input = document.getElementById("searchInput");
+    var filter = input.value.toLowerCase();
+    var cards = document.getElementsByClassName("futsal-card");
+    
+    for (var i = 0; i < cards.length; i++) {
+        var h3 = cards[i].getElementsByTagName("h3")[0];
+        if (h3) {
+            var txtValue = h3.textContent || h3.innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
 }
 
 // Get user's current location using geolocation API
