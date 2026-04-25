@@ -710,10 +710,14 @@ if (isset($_GET['logout'])) {
                 foreach ($recommendedFutsals as $futsal):
                 ?>
                     <div class="futsal-card">
-                        <div class="futsal-image-placeholder">
-                            <div class="futsal-icon">⚽</div>
-                            <div class="futsal-name"><?= htmlspecialchars($futsal['name']) ?></div>
-                        </div>
+                        <?php if (isset($futsal['image'])): ?>
+                            <img src="<?= htmlspecialchars($futsal['image']) ?>" alt="<?= htmlspecialchars($futsal['name']) ?>" class="futsal-image">
+                        <?php else: ?>
+                            <div class="futsal-image-placeholder">
+                                <div class="futsal-icon">⚽</div>
+                                <div class="futsal-name"><?= htmlspecialchars($futsal['name']) ?></div>
+                            </div>
+                        <?php endif; ?>
                         
                         <div class="futsal-content">
                             <?php if ($showRecommendedBadge): ?>
